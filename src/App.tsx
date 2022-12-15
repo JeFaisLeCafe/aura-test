@@ -1,24 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import "./App.css";
+import Dashboard from "./components/Dashboard";
+import { API_KEY } from "./constantes";
+
+axios.defaults.headers.common["Authorization"] = "Bearer " + API_KEY;
 
 function App() {
+  console.log("rerender AP");
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2 className="text-2xl font-bold">Monetisation Dashboard</h2>
+      <Dashboard />
     </div>
   );
 }
