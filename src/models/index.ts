@@ -5,11 +5,25 @@ export interface ApiMonetizationsParams {
   aggregates: string;
 }
 
+export enum Country {
+  US = "US",
+  FR = "FR",
+  UK = "UK",
+  JP = "JP",
+  AU = "AU",
+  SP = "SP"
+}
+
+export enum OS {
+  iOS = "iOS",
+  android = "Android"
+}
+
 export interface ApiMonetization {
   date: string;
-  country: string;
+  country: Country;
   format: string;
-  os: string;
+  os: OS;
   game: string;
   placement: string;
   views: number;

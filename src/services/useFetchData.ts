@@ -1,7 +1,7 @@
-import { ApiMonetizationsParams, ApiMonetization } from "../dataFormat";
 import { API_URL } from "../constantes";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ApiMonetizationsParams, ApiMonetization } from "../models";
 
 const useFetchData = ({
   aggregates,
@@ -12,8 +12,6 @@ const useFetchData = ({
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<ApiMonetization[]>([]);
-
-  console.log({ aggregates, start, end, dimensions });
 
   function refetch(params: ApiMonetizationsParams) {
     fetchData(params);
