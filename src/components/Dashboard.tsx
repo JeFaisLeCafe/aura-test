@@ -11,8 +11,8 @@ import {
 import { getMonetizationByCountry } from "../utils/getMonetizationByCountry";
 import getGameOptionsList from "../utils/getGameOptionsList";
 import { MultiSelect, Option } from "react-multi-select-component";
-import "react-multiple-select-dropdown-lite/dist/index.css";
 import getGameFormatsList from "../utils/getGameFormatsList";
+import { formatNumber } from "../utils/formatNumber";
 
 const dimensions = "date,format,country,os,game,placement";
 const aggregates = "views,revenue,conversions";
@@ -63,8 +63,6 @@ const Dashboard = () => {
   const moneyByCountry = useMemo(() => {
     return getMonetizationByCountry(filteredData);
   }, [filteredData]);
-
-  console.log("data", data);
 
   if (isLoading) {
     return (
@@ -186,15 +184,25 @@ const Dashboard = () => {
                 <td className="border border-slate-600">{game.game}</td>
                 {countryStrings.map((c) => {
                   const d = game.revenues.find((v) => v.country === c);
-                  return <td key={d?.country}>{d?.revenue.toFixed(2)}</td>;
+                  if (!d) return null;
+                  return (
+                    <td key={d.country}>
+                      <p>{d.revenue.toFixed(2)}</p>
+                      <p className="text-xs text-gray-700">
+                        views:
+                        {formatNumber(d.views)} - conversions:{" "}
+                        {formatNumber(d.conversions)}
+                      </p>
+                    </td>
+                  );
                 })}
                 <td className="rounded bg-slate-100">
-                  {game.total.toFixed(2)}
+                  {formatNumber(game.total, 2)}
                 </td>
               </tr>
             );
           })}
-          <tr className="border border-slate-600">
+          <tr className="text-lg border border-slate-600">
             <td className="font-bold border border-slate-600 bg-slate-100">
               Total:
             </td>
@@ -202,15 +210,17 @@ const Dashboard = () => {
               const mbc = moneyByCountry.find((v) => v.country === country);
               return (
                 <td key={country} className="rounded bg-slate-100">
-                  {mbc?.revenue.toFixed(2)}
+                  {formatNumber(mbc?.revenue, 2)}
                 </td>
               );
             })}
             <td className="font-bold rounded bg-slate-100">
-              {moneyByCountry
-                .map((v) => v.revenue)
-                .reduce((acc, v) => acc + v)
-                .toFixed(2)}
+              {formatNumber(
+                moneyByCountry
+                  .map((v) => v.revenue)
+                  .reduce((acc, v) => acc + v),
+                2
+              )}
             </td>
           </tr>
         </tbody>

@@ -9,6 +9,8 @@ export interface FormattedMonetization {
   revenues: {
     country: Country;
     revenue: number;
+    views: number;
+    conversions: number;
   }[];
 }
 export interface Filters {
@@ -49,18 +51,29 @@ export function formatMonetizationForDashboard(
       );
       if (fMontizationCountry) {
         fMontizationCountry.revenue += dataPoint.revenue;
+        fMontizationCountry.conversions += dataPoint.conversions;
+        fMontizationCountry.views += dataPoint.views;
       } else {
         // we need to create the monetization for this game, for this country
         fMonetization.revenues.push({
           country: dataPoint.country,
-          revenue: dataPoint.revenue
+          revenue: dataPoint.revenue,
+          views: dataPoint.views,
+          conversions: dataPoint.conversions
         });
       }
     } else {
       // we need to create the monetization for this game and for this country
       formattedData.push({
         game: dataPoint.game,
-        revenues: [{ country: dataPoint.country, revenue: dataPoint.revenue }],
+        revenues: [
+          {
+            country: dataPoint.country,
+            revenue: dataPoint.revenue,
+            views: dataPoint.views,
+            conversions: dataPoint.conversions
+          }
+        ],
         total: dataPoint.revenue
       });
     }
