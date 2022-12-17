@@ -19,6 +19,7 @@ export function getMonetizationByCountry(
         0
       );
     }
+    moneyByC.push(countryMoney);
   }
   return moneyByC;
 }

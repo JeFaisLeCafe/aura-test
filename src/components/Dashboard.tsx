@@ -1,5 +1,5 @@
 import Loader from "./Loader";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useFetchData from "../services/useFetchData";
 import DatePicker from "react-datepicker";
 import dayjs from "dayjs";
@@ -43,7 +43,9 @@ const Dashboard = () => {
     setFilteredData(formatMonetizationForDashboard(data, { iOS, android }));
   }, [data, iOS, android]);
 
-  const moneyByCountry = getMonetizationByCountry(filteredData);
+  const moneyByCountry = useMemo(() => {
+    return getMonetizationByCountry(filteredData);
+  }, [filteredData]);
 
   if (isLoading) {
     return (
@@ -54,10 +56,11 @@ const Dashboard = () => {
   }
 
   console.log("filteredData", filteredData);
+  console.log("moneyByCountry", moneyByCountry);
 
   return (
-    <div className="flex flex-col w-screen h-screen">
-      <form className="flex flex-row">
+    <div className="flex flex-col w-screen h-screen p-5">
+      <form className="flex flex-row mb-3">
         <div>
           <input
             type="checkbox"
@@ -90,21 +93,25 @@ const Dashboard = () => {
         /> */}
       </form>
 
-      <table>
+      <table className="border border-separate table-auto bg-slate-200 border-slate-500 border-spacing-2">
         <thead>
           <tr>
-            <th>Game</th>
+            <th className="border border-slate-600">Game</th>
             {countryStrings.map((country) => {
-              return <th key={country}>{country}</th>;
+              return (
+                <th className="border border-slate-600" key={country}>
+                  {country}
+                </th>
+              );
             })}
-            <th>Total</th>
+            <th className="border border-slate-600">Total</th>
           </tr>
         </thead>
         <tbody>
           {filteredData.map((game) => {
             return (
               <tr key={game.game}>
-                <td>{game.game}</td>
+                <td className="border border-slate-600">{game.game}</td>
                 {countryStrings.map((c) => {
                   const d = game.revenues.find((v) => v.country === c);
                   return <td>{d?.revenue.toFixed(2)}</td>;
@@ -113,6 +120,21 @@ const Dashboard = () => {
               </tr>
             );
           })}
+          <tr className="border border-slate-600">
+            <td className="font-bold border border-slate-600 bg-slate-100">
+              Total:
+            </td>
+            {countryStrings.map((country) => {
+              const mbc = moneyByCountry.find((v) => v.country === country);
+              return <td>{mbc?.revenue.toFixed(2)}</td>;
+            })}
+            <td className="font-bold rounded bg-slate-100">
+              {moneyByCountry
+                .map((v) => v.revenue)
+                .reduce((acc, v) => acc + v)
+                .toFixed(2)}
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
