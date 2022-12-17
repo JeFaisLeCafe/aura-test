@@ -1,6 +1,7 @@
 import { Country, ApiMonetization } from "../models";
 import * as _ from "lodash";
 import { OS } from "../models/index";
+import { Option } from "react-multi-select-component";
 
 export interface FormattedMonetization {
   game: string;
@@ -14,6 +15,7 @@ export interface Filters {
   // true if we want to include them, false if we want to exclude them
   iOS: boolean;
   android: boolean;
+  selectedGames: Option[];
 }
 
 export function formatMonetizationForDashboard(
@@ -21,10 +23,16 @@ export function formatMonetizationForDashboard(
   filters: Filters
 ): FormattedMonetization[] {
   // first we need to filter the data
-  let filteredData = _.cloneDeep(data);
-  if (!filters.iOS) filteredData = filteredData.filter((v) => v.os !== OS.iOS);
-  if (!filters.android)
-    filteredData = filteredData.filter((v) => v.os !== OS.android);
+
+  let filteredData = _.cloneDeep(data).filter((v) =>
+    filters.selectedGames.map((o) => o.value).includes(v.game)
+  );
+  if (!filters.iOS) {
+    filteredData = filteredData.filter((v) => v.platform !== OS.iOS);
+  }
+  if (!filters.android) {
+    filteredData = filteredData.filter((v) => v.platform !== OS.android);
+  }
 
   // then we need to format the data
   const formattedData: FormattedMonetization[] = [];

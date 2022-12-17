@@ -23,7 +23,7 @@ export interface ApiMonetization {
   date: string;
   country: Country;
   format: string;
-  os: OS;
+  platform: OS;
   game: string;
   placement: string;
   views: number;

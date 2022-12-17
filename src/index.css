@@ -15,3 +15,6 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* https://stackoverflow.com/questions/58955113/react-datepicker-styles-are-not-being-not-applied-on-deployed-build */
+@import "react-datepicker/dist/react-datepicker";
