@@ -16,6 +16,7 @@ export interface Filters {
   iOS: boolean;
   android: boolean;
   selectedGames: Option[];
+  selectedFormats: Option[];
 }
 
 export function formatMonetizationForDashboard(
@@ -26,6 +27,9 @@ export function formatMonetizationForDashboard(
 
   let filteredData = _.cloneDeep(data).filter((v) =>
     filters.selectedGames.map((o) => o.value).includes(v.game)
+  );
+  filteredData = filteredData.filter((v) =>
+    filters.selectedFormats.map((o) => o.value).includes(v.format)
   );
   if (!filters.iOS) {
     filteredData = filteredData.filter((v) => v.platform !== OS.iOS);

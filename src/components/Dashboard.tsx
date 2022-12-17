@@ -9,9 +9,10 @@ import {
   FormattedMonetization
 } from "../utils/formatMonetizationForDashboard";
 import { getMonetizationByCountry } from "../utils/getMonetizationByCountry";
-import getGameOptionsList from "../utils/getGameList";
+import getGameOptionsList from "../utils/getGameOptionsList";
 import { MultiSelect, Option } from "react-multi-select-component";
 import "react-multiple-select-dropdown-lite/dist/index.css";
+import getGameFormatsList from "../utils/getGameFormatsList";
 
 const dimensions = "date,format,country,os,game,placement";
 const aggregates = "views,revenue,conversions";
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [iOS, setIOS] = useState(true);
   const [android, setAndroid] = useState(true);
   const [selectedGames, setSelectedGames] = useState<Option[]>([]);
+  const [selectedFormats, setSelectedFormats] = useState<Option[]>([]);
   const [filteredData, setFilteredData] = useState<FormattedMonetization[]>([]);
 
   const { error, isLoading, data } = useFetchData({
@@ -38,19 +40,31 @@ const Dashboard = () => {
     return getGameOptionsList(data);
   }, [data]);
 
+  const gamesFormats = useMemo(() => {
+    return getGameFormatsList(data);
+  }, [data]);
+
   useEffect(() => {
     setFilteredData(
-      formatMonetizationForDashboard(data, { iOS, android, selectedGames })
+      formatMonetizationForDashboard(data, {
+        iOS,
+        android,
+        selectedGames,
+        selectedFormats
+      })
     );
-  }, [data, iOS, android, selectedGames]);
+  }, [data, iOS, android, selectedGames, selectedFormats]);
 
   useEffect(() => {
     setSelectedGames(getGameOptionsList(data));
+    setSelectedFormats(getGameFormatsList(data));
   }, [data]);
 
   const moneyByCountry = useMemo(() => {
     return getMonetizationByCountry(filteredData);
   }, [filteredData]);
+
+  console.log("data", data);
 
   if (isLoading) {
     return (
@@ -59,10 +73,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
-  const handleOnchange = (val: Option[]) => {
-    setSelectedGames(val);
-  };
 
   return (
     <div className="flex flex-col w-screen h-screen p-5">
@@ -117,15 +127,34 @@ const Dashboard = () => {
             dateFormat="dd/MM/yyyy"
           />
         </div>
-        <p>Games: </p>
-        <MultiSelect
-          className="max-w-[200px]"
-          options={gamesOptions}
-          value={selectedGames}
-          onChange={handleOnchange}
-          labelledBy={"games-select"}
-          disableSearch
-        />
+        <div className="flex items-center">
+          <p>Games: </p>
+          <MultiSelect
+            overrideStrings={{
+              allItemsAreSelected: "All items"
+            }}
+            className="max-w-[200px]"
+            options={gamesOptions}
+            value={selectedGames}
+            onChange={(v: Option[]) => setSelectedGames(v)}
+            labelledBy={"games-select"}
+            disableSearch
+          />
+        </div>
+        <div className="flex items-center">
+          <p>Formats: </p>
+          <MultiSelect
+            overrideStrings={{
+              allItemsAreSelected: "All items"
+            }}
+            className="max-w-[200px]"
+            options={gamesFormats}
+            value={selectedFormats}
+            onChange={(v: Option[]) => setSelectedFormats(v)}
+            labelledBy={"games-select"}
+            disableSearch
+          />
+        </div>
       </form>
 
       {error && (
