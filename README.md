@@ -1,3 +1,28 @@
+# Aura application - Pierre-Etienne Soury
+
+Based the the [instructions](https://docs.google.com/document/d/1cfYaSmm_OWko2ds7axmPjQwQl8JhwUxlGAI99DohwgE/edit), I tried to create a dashboard presenting the revenues of the different games, by country.
+
+Firstly, during the project setup/creation, I decided to go with React / Typescript / Tailwind, because I'm most familiar with these framework, and they are the standard of the industry today.
+
+A first challenge was to understand the API, and to compare what the documentation was saying vs what the API was sending back.
+Then I created a small data model to handle the types properly, with Typescript being in string mode.
+
+Then I tried to create a readable dashboard, comparable to what the instructions were. This led me to need a data formatting function _formatMonetizationForDashboard_, which does a lot of the heavy lifting in getting the data easily presentable.
+
+I then added some filters, to be able to easily read and display a dashboard with the infos wanted: on game, on ad format, on date-span, on the OS.
+
+With all this done I could do a bit of styling, mostly using tailwind. This is far from being pretty, but I think the data is readable in a clear manner.
+
+Finally, I removed what was useless or trials and errors, made sure the variable had understandable names, removed unsused libraries, and pushed everything ready for review.
+
+## Feedback
+
+Overall this little project was a lot of fun, and I appreciated in particular that the choice of framework and library was open.
+The setup was very easy, because the API was provided, with a (out-of-date) documentation.
+I spent roughly 4-5h on this test !
+
+Thanks for considering me.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
